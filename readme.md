@@ -11,7 +11,7 @@ The algorithm correctly calculates this by:
 1. Modeling the problem with 5 key locations: Source (Aman's start), R1, C1, R2, and C2.
 2. Understanding that meal preparation ($pt1$, $pt2$) starts at $t=0$.
 3. If the driver arrives at a restaurant *before* the meal is ready, they must wait. The total time elapsed for that
-   stop becomes $\max(\text{arrival_time}, \text{prep_time})$.
+   stop becomes $\max(\text{arrivalTime}, \text{prepTime})$.
 4. The algorithm generates all valid permutations of visits (e.g., $R_1$ must precede $C_1$) and calculates the total
    time for each.
 5. It then returns the path with the minimum total time.
