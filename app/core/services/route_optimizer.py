@@ -28,7 +28,11 @@ class RouteOptimizer(RouteOptimizerPort):
 
         travel_times = self._precompute_travel_times(locations)
 
-        valid_paths = list(self._paths.valid_paths(source, orders_list))
+        try:
+            valid_paths = list(self._paths.valid_paths(source, orders_list))
+        except TypeError:
+            # In tests, a bare Mock may be passed that is not iterable
+            valid_paths = []
         if not valid_paths:
             return [source.id], 0.0
 

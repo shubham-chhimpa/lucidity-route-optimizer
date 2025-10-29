@@ -91,6 +91,9 @@ def _is_path_valid(path: Tuple[str], order_pairs: List[Tuple[str, str]]) -> bool
     path_indices = {loc_id: index for index, loc_id in enumerate(path)}
 
     for r_id, c_id in order_pairs:
+        # If either id is missing from this path, skip the constraint
+        if r_id not in path_indices or c_id not in path_indices:
+            continue
         if path_indices[r_id] > path_indices[c_id]:
             return False
     return True
