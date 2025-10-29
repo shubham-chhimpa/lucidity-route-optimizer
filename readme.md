@@ -42,6 +42,26 @@ The algorithm correctly calculates this by:
 
 ---
 
+## ⚙️ Configuration
+
+This service uses environment variables via Pydantic Settings (`app/infrastructure/settings.py`). You can set them in your shell or a `.env` file in the project root.
+
+- `AVERAGE_SPEED_KMPH` (default: `20.0`)
+- `EARTH_RADIUS_KM` (default: `6371.0`)
+
+Example `.env`:
+```env
+AVERAGE_SPEED_KMPH=25
+EARTH_RADIUS_KM=6371
+```
+
+Rebuild the container after changing dependencies or `.env`:
+```bash
+docker-compose up --build
+```
+
+---
+
 ## 🔬 How to Test the Endpoint
 
 You can use the `/docs` page or send a `curl` request from your terminal.
@@ -122,32 +142,47 @@ This will return the optimal path and the total time in minutes.
 ```text
 BestRoute/
 ├─ app/
-│  ├─ config.py          # Central domain constants (speed, earth radius)
-│  ├─ logging_config.py  # Centralized logging configuration
-│  ├─ main.py            # FastAPI application: routes, startup, exceptions, health endpoints
-│  ├─ models.py          # Request/response schemas (Pydantic models)
-│  ├─ services.py        # Core routing logic (computes the best route)
-│  └─ utils.py           # Utilities (Haversine distance, travel time)
+│  ├─ main.py                      # FastAPI app factory, registers routers and errors
+│  ├─ api/
+│  │  ├─ routers/
+│  │  │  └─ routes.py             # `/find-route` endpoint
+│  │  ├─ deps.py                  # Dependency injection wiring (DI)
+│  │  └─ errors.py                # Centralized exception handlers
+│  ├─ schemas/
+│  │  └─ route.py                 # API DTOs: RouteRequest, RouteResponse
+│  ├─ core/
+│  │  ├─ domain/
+│  │  │  ├─ entities.py           # Domain entities: Location, Order
+│  │  │  └─ ports.py              # Interfaces (ports): calculators, generators, optimizer
+│  │  └─ services/
+│  │     ├─ path_generator.py     # Generates valid permutations (R_i before C_i)
+│  │     ├─ cost_calculator.py    # Computes total time (travel + wait)
+│  │     └─ route_optimizer.py    # Orchestrates to find best path
+│  └─ infrastructure/
+│     ├─ distance/
+│     │  ├─ haversine_calculator.py  # DistanceCalculator adapter (Haversine)
+│     │  └─ speed_config.py          # ConstantSpeedEstimator adapter
+│     ├─ logging/
+│     │  └─ config.py              # setup_logging
+│     └─ settings.py               # Pydantic Settings (env-driven config)
 ├─ images/
-│  └─ api_testing.png    # Screenshot(s) for documentation
-├─ Dockerfile            # App image definition (uvicorn server)
-├─ docker-compose.yml    # Local dev orchestration (port mapping, reload)
-├─ requirements.txt      # Python dependencies
-└─ readme.md             # Documentation and usage guide
+│  └─ api_testing.png              # Screenshot(s) for documentation
+├─ Dockerfile                      # App image definition (uvicorn server)
+├─ docker-compose.yml              # Local dev orchestration (port mapping, reload)
+├─ requirements.txt                # Python dependencies
+└─ readme.md                       # Documentation and usage guide
 ```
 
 ### What each part does
 
-- `app/main.py`: Exposes HTTP endpoints:
-  - `POST /find-route` → delegates to `services.find_best_route`
-  - `GET /healthz`, `GET /readyz` → health/readiness checks
-  - Startup logging setup and global exception handling
-- `app/models.py`: Data contracts using Pydantic (`Location`, `Order`, `RouteRequest`, `RouteResponse`)
-- `app/services.py`: Business logic for optimal route (permutation validation, wait times)
-- `app/utils.py`: Math helpers for distance and time
-- `app/config.py`: Constants used across the app
-- `app/logging_config.py`: Production-friendly logging setup
-- `images/`: Documentation assets
-- `Dockerfile`/`docker-compose.yml`: Containerized local run with live reload
-- `requirements.txt`: Dependencies list
+- `app/main.py`: Creates the FastAPI app, registers routers and error handlers, startup logging
+- `app/api/routers/routes.py`: HTTP endpoints (`POST /find-route`, `GET /healthz`, `GET /readyz`)
+- `app/api/deps.py`: Wires domain services and infrastructure adapters through DI
+- `app/schemas/route.py`: API schemas (Pydantic models) for request/response
+- `app/core/domain/*`: Pure domain — entities and interfaces (ports)
+- `app/core/services/*`: Domain services — path generation, cost calculation, route optimization
+- `app/infrastructure/distance/*`: Technical adapters — Haversine distance, constant speed estimator
+- `app/infrastructure/logging/config.py`: Central logging configuration
+- `app/infrastructure/settings.py`: Environment-driven configuration via Pydantic Settings
+- `images/`, `Dockerfile`, `docker-compose.yml`, `requirements.txt`: tooling and assets
 
