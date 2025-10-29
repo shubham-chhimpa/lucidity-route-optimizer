@@ -142,6 +142,7 @@ This will return the optimal path and the total time in minutes.
 
 *(Note: The exact path and time will depend on the coordinates and prep times you provide.)*
 
+---
 
 ![API Testing Example](./images/api_testing.png)
 
@@ -196,3 +197,9 @@ BestRoute/
 - `app/infrastructure/settings.py`: Environment-driven configuration via Pydantic Settings
 - `images/`, `Dockerfile`, `docker-compose.yml`, `requirements.txt`: tooling and assets
 
+---
+## Flow Diagram
+
+![Flow Diagram](./images/flow_diagram.png)
+
+---
