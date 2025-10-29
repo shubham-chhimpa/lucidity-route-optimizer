@@ -112,5 +112,8 @@ This will return the optimal path and the total time in minutes.
 
 *(Note: The exact path and time will depend on the coordinates and prep times you provide.)*
 
+
+![API Testing Example](./images/api_testing.png)
+
 ---
 
