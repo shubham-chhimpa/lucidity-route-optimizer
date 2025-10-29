@@ -117,3 +117,37 @@ This will return the optimal path and the total time in minutes.
 
 ---
 
+## Project Structure
+
+```text
+BestRoute/
+├─ app/
+│  ├─ config.py          # Central domain constants (speed, earth radius)
+│  ├─ logging_config.py  # Centralized logging configuration
+│  ├─ main.py            # FastAPI application: routes, startup, exceptions, health endpoints
+│  ├─ models.py          # Request/response schemas (Pydantic models)
+│  ├─ services.py        # Core routing logic (computes the best route)
+│  └─ utils.py           # Utilities (Haversine distance, travel time)
+├─ images/
+│  └─ api_testing.png    # Screenshot(s) for documentation
+├─ Dockerfile            # App image definition (uvicorn server)
+├─ docker-compose.yml    # Local dev orchestration (port mapping, reload)
+├─ requirements.txt      # Python dependencies
+└─ readme.md             # Documentation and usage guide
+```
+
+### What each part does
+
+- `app/main.py`: Exposes HTTP endpoints:
+  - `POST /find-route` → delegates to `services.find_best_route`
+  - `GET /healthz`, `GET /readyz` → health/readiness checks
+  - Startup logging setup and global exception handling
+- `app/models.py`: Data contracts using Pydantic (`Location`, `Order`, `RouteRequest`, `RouteResponse`)
+- `app/services.py`: Business logic for optimal route (permutation validation, wait times)
+- `app/utils.py`: Math helpers for distance and time
+- `app/config.py`: Constants used across the app
+- `app/logging_config.py`: Production-friendly logging setup
+- `images/`: Documentation assets
+- `Dockerfile`/`docker-compose.yml`: Containerized local run with live reload
+- `requirements.txt`: Dependencies list
+
