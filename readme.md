@@ -66,7 +66,7 @@ docker-compose up --build
 
 You can use the `/docs` page or send a `curl` request from your terminal.
 
-Since no coordinates were provided in the prompt, this example uses sample coordinates for Koramangala (Source) and
+Since no coordinates were provided, this example uses sample coordinates for Koramangala (Source) and
 nearby areas.
 
 **Example `curl` Request:**
