@@ -33,13 +33,22 @@ The algorithm correctly calculates this by:
 2. **Build and Run the Container:**
    From the root of the project directory, run:
    ```bash
-   docker-compose up --build
+    docker-compose up --build
    ```
    The API will be running at `http://localhost:8000`.
 
 3. **Access the API Docs:**
    Open your browser and navigate to `http://localhost:8000/docs` to see the interactive FastAPI documentation.
 
+---
+
+## 🧪 Running Tests
+
+To run all test cases inside the Docker environment:
+
+```bash
+  docker compose run --rm api bash scripts/test.sh
+````
 ---
 
 ## ⚙️ Configuration
@@ -57,7 +66,7 @@ EARTH_RADIUS_KM=6371
 
 Rebuild the container after changing dependencies or `.env`:
 ```bash
-docker-compose up --build
+  docker-compose up --build
 ```
 
 ---
@@ -72,6 +81,7 @@ nearby areas.
 **Example `curl` Request:**
 
 ```bash
+
 curl -X 'POST' \
   'http://localhost:8000/find-route' \
   -H 'accept: application/json' \

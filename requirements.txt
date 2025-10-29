@@ -3,3 +3,9 @@ uvicorn[standard]
 pydantic
 pydantic-settings
 pytest
+pytest-asyncio
+pytest-cov
+pytest-mock
+httpx
+factory-boy
+faker
