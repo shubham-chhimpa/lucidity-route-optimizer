@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,3 +18,21 @@ spec:
       - name: myapp
         image: registry.jenkins.svc.cluster.local:5000/myapp:main
         imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+  namespace: default
+spec:
+  selector:
+    app: myapp
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80        # Service port
+      targetPort: 80  # Pod container port
+      nodePort: 30080 # Port on Raspberry Pi to access externally
